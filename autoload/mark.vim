@@ -730,6 +730,82 @@ function! mark#SearchCurrentMark( isBackward )
 	return l:result
 endfunction
 
+function! s:NextUsedGroupIndex(groupIndex)
+	let i = a:groupIndex + 1
+	while i < s:cycle
+		if ! empty(s:pattern[i])
+			return i
+		endif
+		let i += 1
+	endwhile
+	let i = 0
+	while i < a:groupIndex
+		if ! empty(s:pattern[i])
+			return i
+		endif
+		let i += 1
+	endwhile
+	return -1
+endfunction
+
+function! s:PrevUsedGroupIndex(groupIndex)
+	let i = a:groupIndex - 1
+	while i >= 0
+		if ! empty(s:pattern[i])
+			return i
+		endif
+		let i -= 1
+	endwhile
+	let i = s:cycle - 1
+	while i > a:groupIndex
+		if ! empty(s:pattern[i])
+			return i
+		endif
+		let i -= 1
+	endwhile
+	return -1
+endfunction
+
+" go to the next group
+function! mark#SearchNextGroup( count )
+	let l:groupIndex = -1
+	" Use last search, and fall back to current mark if possible.
+	if s:lastSearch == -1
+		let [l:markText, l:markPosition, l:markIndex] = mark#CurrentMark()
+		if empty(l:markText)
+			return 0
+		endif
+		let l:groupIndex = s:NextUsedGroupIndex(l:markIndex)
+	else
+		let l:groupIndex = s:NextUsedGroupIndex(s:lastSearch)
+	endif
+	let i = a:count - 1
+	while i > 0
+		let l:groupIndex = s:NextUsedGroupIndex(s:nextGroupIndex)
+	endwhile
+	call mark#SearchGroupMark( l:groupIndex + 1, 1, 0, 1)
+endfunction
+
+" go to the next group
+function! mark#SearchPrevGroup( count )
+	let l:groupIndex = -1
+	" Use last search, and fall back to current mark if possible.
+	if s:lastSearch == -1
+		let [l:markText, l:markPosition, l:markIndex] = mark#CurrentMark()
+		if empty(l:markText)
+			return 0
+		endif
+		let l:groupIndex = s:PrevUsedGroupIndex(l:markIndex)
+	else
+		let l:groupIndex = s:PrevUsedGroupIndex(s:lastSearch)
+	endif
+	let i = a:count - 1
+	while i > 0
+		let l:groupIndex = s:PrevUsedGroupIndex(s:groupIndex)
+	endwhile
+	call mark#SearchGroupMark( l:groupIndex + 1, 1, 1, 1)
+endfunction
+
 function! mark#SearchGroupMark( groupNum, count, isBackward, isSetLastSearch )
 	if a:groupNum == 0
 		" No mark group number specified; use last search, and fall back to

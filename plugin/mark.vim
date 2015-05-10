@@ -343,10 +343,10 @@ vnoremap <silent> <Plug>MarkSet               :<C-u>if !mark#DoMark(v:count, mar
 vnoremap <silent> <Plug>MarkIWhiteSet         :<C-u>if !mark#DoMark(v:count, mark#GetVisualSelectionAsLiteralWhitespaceIndifferentPattern())[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
 nnoremap <silent> <Plug>MarkRegex             :<C-u>if !mark#MarkRegex(v:count, '')<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>if ! empty(v:errmsg)<Bar>echoerr v:errmsg<Bar>endif<Bar>endif<CR>
 vnoremap <silent> <Plug>MarkRegex             :<C-u>if !mark#MarkRegex(v:count, mark#GetVisualSelectionAsRegexp())<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>if ! empty(v:errmsg)<Bar>echoerr v:errmsg<Bar>endif<Bar>endif<CR>
-nnoremap <silent> <Plug>MarkClear             :<C-u>if !mark#DoMark(v:count, (v:count ? '' : mark#CurrentMark()[0]))[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
-nnoremap <silent> <Plug>MarkAllClear          :<C-u>call mark#ClearAll()<CR>
-nnoremap <silent> <Plug>MarkConfirmAllClear   :<C-u>if confirm('Really delete all marks? This cannot be undone.', "&Yes\n&No") == 1<Bar>call mark#ClearAll()<Bar>endif<CR>
-nnoremap <silent> <Plug>MarkToggle            :<C-u>call mark#Toggle()<CR>
+noremap <silent> <Plug>MarkClear             :<C-u>if !mark#DoMark(v:count, (v:count ? '' : mark#CurrentMark()[0]))[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
+noremap <silent> <Plug>MarkAllClear          :<C-u>call mark#ClearAll()<CR>
+noremap <silent> <Plug>MarkConfirmAllClear   :<C-u>if confirm('Really delete all marks? This cannot be undone.', "&Yes\n&No") == 1<Bar>call mark#ClearAll()<Bar>endif<CR>
+noremap <silent> <Plug>MarkToggle            :<C-u>call mark#Toggle()<CR>
 
 nnoremap <silent> <Plug>MarkSearchCurrentNext :<C-u>call mark#SearchCurrentMark(0)<CR>
 nnoremap <silent> <Plug>MarkSearchCurrentPrev :<C-u>call mark#SearchCurrentMark(1)<CR>
@@ -362,6 +362,8 @@ nnoremap <silent> <Plug>MarkSearchOrAnyNext   :<C-u>if !mark#SearchNext(0,'mark#
 nnoremap <silent> <Plug>MarkSearchOrAnyPrev   :<C-u>if !mark#SearchNext(1,'mark#SearchAnyMark')<Bar>execute 'normal! #zv'<Bar>endif<CR>
 nnoremap <silent> <Plug>MarkSearchGroupNext   :<C-u>call mark#SearchGroupMark(v:count, 1, 0, 1)<CR>
 nnoremap <silent> <Plug>MarkSearchGroupPrev   :<C-u>call mark#SearchGroupMark(v:count, 1, 1, 1)<CR>
+nnoremap <silent> <Plug>MarkSearchNextGroup   :<C-u>call mark#SearchNextGroup(v:count)<CR>
+nnoremap <silent> <Plug>MarkSearchPrevGroup   :<C-u>call mark#SearchPrevGroup(v:count)<CR>
 
 
 if !hasmapto('<Plug>MarkSet', 'n')
